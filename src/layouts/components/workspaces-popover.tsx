@@ -29,8 +29,8 @@ export function WorkspacesPopover({ data = [], sx, ...other }: WorkspacesPopover
     setWorkspace(newValue);
   };
 
-  const renderAvatar = (alt: string, src: string) => (
-    <Box component="img" alt={alt} src={src} sx={{ width: 24, height: 24, borderRadius: '50%' }} />
+  const renderAvatar = () => (
+    <Box component="img" alt="Logo" src="/assets/images/logo.svg" sx={{ width: 24, height: 24, borderRadius: '50%' }} />
   );
 
   const renderLabel = (plan: string) => (
@@ -39,7 +39,7 @@ export function WorkspacesPopover({ data = [], sx, ...other }: WorkspacesPopover
 
   return (
     <Paper sx={{ py: 1.5, px: 0, borderRadius: 2, width: 260 }}>
-    
+
       {/* Menú SIEMPRE visible */}
       <MenuList
         disablePadding
@@ -65,7 +65,7 @@ export function WorkspacesPopover({ data = [], sx, ...other }: WorkspacesPopover
             selected={option.id === workspace?.id}
             onClick={() => handleChangeWorkspace(option)}
           >
-            {renderAvatar(option.name, option.logo)}
+            {renderAvatar()}
 
             <Box component="span" sx={{ flexGrow: 1 }}>
               {option.name}
