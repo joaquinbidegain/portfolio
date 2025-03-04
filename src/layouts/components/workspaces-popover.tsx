@@ -44,7 +44,7 @@ export function WorkspacesPopover({ data = [], sx, ...other }: WorkspacesPopover
       <MenuList
         disablePadding
         sx={{
-          p: 0.5,
+          p: 0,
           gap: 0.5,
           display: 'flex',
           flexDirection: 'column',

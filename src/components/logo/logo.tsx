@@ -1,61 +1,119 @@
-import type { BoxProps } from '@mui/material/Box';
-
-import { useId, forwardRef } from 'react';
-
-import Box from '@mui/material/Box';
+import { styled, keyframes } from '@mui/system';
+import { forwardRef, useId, useState, useEffect } from 'react';
+import { Box, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-
 import { RouterLink } from 'src/routes/components';
-
 import { logoClasses } from './classes';
 
-// ----------------------------------------------------------------------
+// Definición de animaciones para el texto
+const typeIn = keyframes`
+  0% { width: 0; }
+  100% { width: 100%; }
+`;
 
-export type LogoProps = BoxProps & {
+const blink = keyframes`
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+`;
+
+const popIn = keyframes`
+  0% { transform: scale(0); opacity: 0; }
+  70% { transform: scale(1.1); }
+  100% { transform: scale(1); opacity: 1; }
+`;
+
+// Componentes estilizados para el texto
+const LogoTextContainer = styled(Box)(({ theme }) => ({
+  display: 'inline-flex',
+  alignItems: 'center',
+  fontFamily: 'monospace',
+  position: 'relative',
+  overflow: 'hidden',
+  height: '1.5rem', // Establece una altura fija para el contenedor del logo
+}));
+
+const LogoText = styled(Typography, {
+  shouldForwardProp: (prop) => prop !== 'typing',
+})<{ typing: boolean }>(({ typing, theme }) => ({
+  fontWeight: 900,
+  letterSpacing: '.1rem',
+  color: theme.palette.primary.main,
+  fontSize: '1.25rem',
+  position: 'relative',
+  whiteSpace: 'nowrap',
+  ...(typing && {
+    '&::after': {
+      content: '""',
+      position: 'absolute',
+      right: '-4px',
+      animation: `${blink} 1s step-end infinite`,
+    },
+  }),
+}));
+
+const Brace = styled('span')(({ theme }) => ({
+  fontWeight: 900,
+  color: theme.palette.primary.main,
+  transition: 'transform 0.6s cubic-bezier(0.25, 0.1, 0.25, 1)',
+  display: 'inline-block',
+  fontFamily: 'inherit',
+  verticalAlign: 'middle',
+  lineHeight: '1', // Evita alineaciones raras
+  fontSize: 'inherit', // Mantiene coherencia con el texto principal
+
+  '&:hover': {
+    transform: 'scale(1.2)',
+  },
+  '&::before, &::after': {
+    visibility: 'hidden',
+    opacity: 0,
+  }
+}));
+
+const LogoChar = styled('span')<{ delay: number }>(({ delay }) => ({
+  display: 'inline-block',
+  animation: `${popIn} 0.5s ease forwards`,
+  animationDelay: `${delay * 0.1}s`,
+  opacity: 0,
+  transform: 'scale(0)',
+}));
+
+export type LogoProps = {
   href?: string;
   isSingle?: boolean;
   disableLink?: boolean;
-};
+} & React.ComponentProps<typeof Box>;
 
 export const Logo = forwardRef<HTMLDivElement, LogoProps>(
-  (
-    { width, href = '/', height, isSingle = true, disableLink = false, className, sx, ...other },
-    ref
-  ) => {
+  ({ width, href = '/', height, isSingle = true, disableLink = false, className, sx, ...other }, ref) => {
     const theme = useTheme();
-
-    const gradientId = useId();
-
-    const TEXT_PRIMARY = theme.vars.palette.text.primary;
-    const PRIMARY_LIGHT = theme.vars.palette.primary.light;
-    const PRIMARY_MAIN = theme.vars.palette.primary.main;
-    const PRIMARY_DARKER = theme.vars.palette.primary.dark;
-
-    const singleLogo = (
-      <Box
-        component="img"
-        alt="Single logo"
-        src="/assets/images/joaquinbidegain.svg" // Ruta relativa al logo SVG en la carpeta public
-        sx={{ width: '100%', height: '100%', objectFit: 'contain' }} // Ajusta el tamaño del logo al contenedor
-      />
-    );
-
-    const fullLogo = (
-      <Box
-        component="img"
-        alt="Full logo"
-        src="/assets/images/joaquinbidegain.svg" // Ruta relativa al logo SVG en la carpeta public
-        sx={{ width: '100%', height: '100%', objectFit: 'contain' }} // Ajusta el tamaño del logo al contenedor
-      />
-    );
-
-    const baseSize = {
-      width: width ?? 40,
-      height: height ?? 40,
-      ...(!isSingle && {
-        width: width ?? 102,
-        height: height ?? 36,
-      }),
+    const [isTyping, setIsTyping] = useState(true);
+    const [text, setText] = useState("");
+    const fullText = "JoaCoCodes";
+    
+    // Efecto de escritura
+    useEffect(() => {
+      if (isTyping && text.length < fullText.length) {
+        const timeout = setTimeout(() => {
+          setText(fullText.slice(0, text.length + 1));
+        }, 150);
+    
+        return () => clearTimeout(timeout);
+      }
+    
+      if (text.length === fullText.length) {
+        setIsTyping(false);
+      }
+    
+      return undefined;
+    }, [text, isTyping]);    
+    
+    // Reiniciar animación al hacer hover
+    const handleMouseEnter = () => {
+      if (!isTyping && text.length === fullText.length) {
+        setText("");
+        setIsTyping(true);
+      }
     };
 
     return (
@@ -65,17 +123,31 @@ export const Logo = forwardRef<HTMLDivElement, LogoProps>(
         href={href}
         className={logoClasses.root.concat(className ? ` ${className}` : '')}
         aria-label="Logo"
+        onMouseEnter={handleMouseEnter}
         sx={{
-          
           flexShrink: 0,
           display: 'inline-flex',
+          textDecoration: 'none !important', // Asegura que el enlace no tenga subrayado
           verticalAlign: 'middle',
+          position: 'relative',
+          alignItems: 'center',
           ...(disableLink && { pointerEvents: 'none' }),
           ...sx,
         }}
         {...other}
       >
-        {isSingle ? singleLogo : fullLogo}
+        {/* Logo animado con texto */}
+        <LogoTextContainer>
+          <Brace>{"{"}</Brace>
+          <LogoText typing={isTyping}>
+            {text.split('').map((char, index) => (
+              <LogoChar key={index} delay={index}>
+                {char}
+              </LogoChar>
+            ))}
+          </LogoText>
+          <Brace>{"}"}</Brace>
+        </LogoTextContainer>
       </Box>
     );
   }
