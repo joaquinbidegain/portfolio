@@ -1,6 +1,7 @@
 import type { Theme, SxProps, Breakpoint } from '@mui/material/styles';
 
 import { useState } from 'react';
+import { useLocation } from 'react-router-dom'; // Importamos useLocation
 
 import Box from '@mui/material/Box';
 import Alert from '@mui/material/Alert';
@@ -35,10 +36,13 @@ export type DashboardLayoutProps = {
 
 export function DashboardLayout({ sx, children, header }: DashboardLayoutProps) {
   const theme = useTheme();
-
+  const location = useLocation(); // Hook para obtener la ruta actual
   const [navOpen, setNavOpen] = useState(false);
 
   const layoutQuery: Breakpoint = 'lg';
+
+  // Determinar si mostrar el header según la ruta actual
+  const showHeader = location.pathname !== '/'; // Ocultar header en la raíz (/)
 
   return (
     <LayoutSection
@@ -46,66 +50,68 @@ export function DashboardLayout({ sx, children, header }: DashboardLayoutProps) 
        * Header
        *************************************** */
       headerSection={
-        <HeaderSection
-          layoutQuery={layoutQuery}
-          slotProps={{
-            container: {
-              maxWidth: false,
-              sx: { px: { [layoutQuery]: 5 } },
-            },
-          }}
-          sx={header?.sx}
-          slots={{
-            topArea: (
-              <Alert severity="info" sx={{ display: 'none', borderRadius: 0 }}>
-                This is an info Alert.
-              </Alert>
-            ),
-            leftArea: (
-              <>
-                <MenuButton
-                  onClick={() => setNavOpen(true)}
-                  sx={{
-                    ml: -1,
-                    [theme.breakpoints.up(layoutQuery)]: { display: 'none' },
-                  }}
-                />
-                <NavMobile
-                  data={navData}
-                  open={navOpen}
-                  onClose={() => setNavOpen(false)}
-                  workspaces={_workspaces}
-                />
-              </>
-            ),
-            rightArea: (
-              <Box gap={1} display="flex" alignItems="center">
-                <Searchbar />
-                <LanguagePopover data={_langs} />
-                <NotificationsPopover data={_notifications} />
-                <AccountPopover
-                  data={[
-                    {
-                      label: 'Home',
-                      href: '/',
-                      icon: <Iconify width={22} icon="solar:home-angle-bold-duotone" />,
-                    },
-                    {
-                      label: 'Profile',
-                      href: '#',
-                      icon: <Iconify width={22} icon="solar:shield-keyhole-bold-duotone" />,
-                    },
-                    {
-                      label: 'Settings',
-                      href: '#',
-                      icon: <Iconify width={22} icon="solar:settings-bold-duotone" />,
-                    },
-                  ]}
-                />
-              </Box>
-            ),
-          }}
-        />
+        showHeader && ( // Mostrar el header solo si showHeader es true
+          <HeaderSection
+            layoutQuery={layoutQuery}
+            slotProps={{
+              container: {
+                maxWidth: false,
+                sx: { px: { [layoutQuery]: 5 } },
+              },
+            }}
+            sx={header?.sx}
+            slots={{
+              topArea: (
+                <Alert severity="info" sx={{ display: 'none', borderRadius: 0 }}>
+                  This is an info Alert.
+                </Alert>
+              ),
+              leftArea: (
+                <>
+                  <MenuButton
+                    onClick={() => setNavOpen(true)}
+                    sx={{
+                      ml: -1,
+                      [theme.breakpoints.up(layoutQuery)]: { display: 'none' },
+                    }}
+                  />
+                  <NavMobile
+                    data={navData}
+                    open={navOpen}
+                    onClose={() => setNavOpen(false)}
+                    workspaces={_workspaces}
+                  />
+                </>
+              ),
+              rightArea: (
+                <Box gap={1} display="flex" alignItems="center">
+                  <Searchbar />
+                  <LanguagePopover data={_langs} />
+                  <NotificationsPopover data={_notifications} />
+                  <AccountPopover
+                    data={[
+                      {
+                        label: 'Home',
+                        href: '/',
+                        icon: <Iconify width={22} icon="solar:home-angle-bold-duotone" />,
+                      },
+                      {
+                        label: 'Profile',
+                        href: '#',
+                        icon: <Iconify width={22} icon="solar:shield-keyhole-bold-duotone" />,
+                      },
+                      {
+                        label: 'Settings',
+                        href: '#',
+                        icon: <Iconify width={22} icon="solar:settings-bold-duotone" />,
+                      },
+                    ]}
+                  />
+                </Box>
+              ),
+            }}
+          />
+        )
       }
       /** **************************************
        * Sidebar
@@ -129,7 +135,7 @@ export function DashboardLayout({ sx, children, header }: DashboardLayoutProps) 
       sx={{
         [`& .${layoutClasses.hasSidebar}`]: {
           [theme.breakpoints.up(layoutQuery)]: {
-            pl: 'var(--layout-nav-vertical-width)',
+            pl: 'var(--layout-nav-vertical-width)', // El sidebar siempre está presente
           },
         },
         ...sx,

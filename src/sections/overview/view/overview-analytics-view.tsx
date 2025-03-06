@@ -20,7 +20,7 @@ export function OverviewAnalyticsView() {
   return (
     <DashboardContent maxWidth="xl">
       <Typography variant="h4" sx={{ mb: { xs: 3, md: 5 } }}>
-        Hi, Welcome to Joaquin Bidegain portfolio! 👋
+        Hi, Welcome to the dashboard information about mi portfolio. 👋
       </Typography>
 
       <Grid container spacing={3}>
