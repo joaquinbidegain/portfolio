@@ -1,7 +1,6 @@
 import React from 'react';
 import { Box, Typography, Button, Container } from '@mui/material';
 import { styled } from '@mui/system';
- // Icon for "Contact us" (assuming import is resolved)
 
 // Define the custom props for StyledCard
 interface StyledCardProps {
@@ -121,7 +120,7 @@ const StyledCard = styled(Box, {
   shouldForwardProp: (prop) => prop !== 'bgcolor' && prop !== 'isWide',
 })<StyledCardProps>(({ theme, bgcolor, isWide }) => ({
   width: '100%',
-  height: isWide ? '150px' : '120px', // Adjusted for mobile consistency
+  height: '150px', // Set a consistent height for all cards on mobile
   borderRadius: '24px',
   backgroundColor: bgcolor || '#fff',
   display: 'flex',
@@ -136,10 +135,10 @@ const StyledCard = styled(Box, {
     backgroundColor: bgcolor ? `${bgcolor}CC` : '#fff',
   },
   [theme.breakpoints.down('md')]: {
-    width: isWide ? '100%' : '80%', // Full width for "Contact us" on mobile
+    width: '100%', // Full width for all cards on mobile
   },
   [theme.breakpoints.down('sm')]: {
-    height: isWide ? '150px' : '120px',
+    height: '150px', // Set a consistent height for all cards on mobile
     padding: theme.spacing(1.5),
   },
   [theme.breakpoints.up('lg')]: {

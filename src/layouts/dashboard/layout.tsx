@@ -1,5 +1,4 @@
 import type { Theme, SxProps, Breakpoint } from '@mui/material/styles';
-
 import { useState } from 'react';
 import { useLocation } from 'react-router-dom'; // Importamos useLocation
 
@@ -85,10 +84,10 @@ export function DashboardLayout({ sx, children, header }: DashboardLayoutProps) 
               ),
               rightArea: (
                 <Box gap={1} display="flex" alignItems="center">
-                  <Searchbar />
+                  {/* <Searchbar /> */}
                   <LanguagePopover data={_langs} />
-                  <NotificationsPopover data={_notifications} />
-                  <AccountPopover
+                  {/* <NotificationsPopover data={_notifications} /> */}
+                  {/* <AccountPopover
                     data={[
                       {
                         label: 'Home',
@@ -106,7 +105,7 @@ export function DashboardLayout({ sx, children, header }: DashboardLayoutProps) 
                         icon: <Iconify width={22} icon="solar:settings-bold-duotone" />,
                       },
                     ]}
-                  />
+                  /> */}
                 </Box>
               ),
             }}
@@ -141,6 +140,22 @@ export function DashboardLayout({ sx, children, header }: DashboardLayoutProps) 
         ...sx,
       }}
     >
+      {!showHeader && (
+        <MenuButton
+          onClick={() => setNavOpen(true)}
+          sx={{
+            ml: -1,
+            [theme.breakpoints.up(layoutQuery)]: { display: 'none' },
+            bgcolor: 'transparent', // Sin color de fondo en la versión móvil
+          }}
+        />
+      )}
+      <NavMobile
+        data={navData}
+        open={navOpen}
+        onClose={() => setNavOpen(false)}
+        workspaces={_workspaces}
+      />
       <Main>{children}</Main>
     </LayoutSection>
   );
