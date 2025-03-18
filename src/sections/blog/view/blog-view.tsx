@@ -1,10 +1,9 @@
-import { useState, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Unstable_Grid2';
 import Typography from '@mui/material/Typography';
-import Pagination from '@mui/material/Pagination';
 
 import { _posts } from 'src/_mock';
 import { DashboardContent } from 'src/layouts/dashboard';
@@ -12,17 +11,21 @@ import { DashboardContent } from 'src/layouts/dashboard';
 import { Iconify } from 'src/components/iconify';
 
 import { PostItem } from '../post-item';
-import { PostSort } from '../post-sort';
-import { PostSearch } from '../post-search';
 
 // ----------------------------------------------------------------------
 
 export function BlogView() {
-  const [sortBy, setSortBy] = useState('latest');
-
-  const handleSort = useCallback((newSort: string) => {
-    setSortBy(newSort);
-  }, []);
+  const [expandedIndex, setExpandedIndex] = useState(0);
+  const postsToShow = _posts.slice(0, 3);
+  
+  // Efecto para cambiar la card expandida cada 3 segundos
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setExpandedIndex((prevIndex) => (prevIndex + 1) % postsToShow.length);
+    }, 3000); // Cambia cada 3 segundos
+    
+    return () => clearInterval(interval);
+  }, [postsToShow.length]);
 
   return (
     <DashboardContent>
@@ -40,32 +43,49 @@ export function BlogView() {
       </Box>
 
       <Box display="flex" alignItems="center" justifyContent="space-between" sx={{ mb: 5 }}>
-        <PostSearch posts={_posts} />
-        <PostSort
-          sortBy={sortBy}
-          onSort={handleSort}
-          options={[
-            { value: 'latest', label: 'Latest' },
-            { value: 'popular', label: 'Popular' },
-            { value: 'oldest', label: 'Oldest' },
-          ]}
-        />
+        {/* Comentado como en el original */}
       </Box>
 
-      <Grid container spacing={3}>
-        {_posts.map((post, index) => {
+      {/* Aquí cambiamos de Grid a Flex para tener más control sobre el ancho */}
+      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 3 }}>
+        {postsToShow.map((post, index) => {
           const latestPostLarge = index === 0;
           const latestPost = index === 1 || index === 2;
+          const isExpanded = index === expandedIndex;
 
           return (
-            <Grid key={post.id} xs={12} sm={latestPostLarge ? 12 : 6} md={latestPostLarge ? 6 : 3}>
-              <PostItem post={post} latestPost={latestPost} latestPostLarge={latestPostLarge} />
-            </Grid>
+            <Box
+              key={post.id}
+              sx={{
+                width: isExpanded ? '60%' : '18%',
+                flexGrow: isExpanded ? 1 : 0,
+                flexShrink: 0,
+                transition: 'all 0.8s ease-in-out',
+                height: '400px', // Altura fija para todas las cards
+                '@media (max-width: 900px)': {
+                  width: isExpanded ? '100%' : '45%',
+                },
+                '@media (max-width: 600px)': {
+                  width: '100%',
+                }
+              }}
+            >
+              <PostItem 
+                post={post} 
+                latestPost={latestPost} 
+                latestPostLarge={latestPostLarge} 
+                sx={{
+                  height: '100%',
+                  transition: 'box-shadow 0.8s ease-in-out',
+                  position: 'relative',
+                  zIndex: isExpanded ? 10 : 1,
+                  boxShadow: isExpanded ? '0 8px 24px rgba(0,0,0,0.15)' : '0 2px 8px rgba(0,0,0,0.1)'
+                }}
+              />
+            </Box>
           );
         })}
-      </Grid>
-
-      <Pagination count={10} color="primary" sx={{ mt: 8, mx: 'auto' }} />
+      </Box>
     </DashboardContent>
   );
 }
