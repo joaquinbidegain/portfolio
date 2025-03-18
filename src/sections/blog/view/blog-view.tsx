@@ -1,31 +1,62 @@
-import { useState, useEffect, useCallback } from 'react';
+// src/views/BlogView.tsx
+import { useState, useEffect } from 'react';
 
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Grid from '@mui/material/Unstable_Grid2';
 import Typography from '@mui/material/Typography';
 
-import { _posts } from 'src/_mock';
+import { _posts } from 'src/_mock/cvData';
 import { DashboardContent } from 'src/layouts/dashboard';
-
 import { Iconify } from 'src/components/iconify';
+import { ColorfulPostItem } from '../color-item';
 
-import { PostItem } from '../post-item';
+interface Colors {
+  main: string;
+  light: string;
+  pattern: string;
+}
 
-// ----------------------------------------------------------------------
+const colorSchemes: Colors[] = [
+  {
+    main: 'primary.main',
+    light: 'primary.lighter',
+    pattern: 'primary.dark'
+  },
+  {
+    main: 'secondary.main',
+    light: 'secondary.lighter',
+    pattern: 'secondary.dark'
+  },
+  {
+    main: 'info.main',
+    light: 'info.lighter',
+    pattern: 'info.dark'
+  }
+];
 
 export function BlogView() {
   const [expandedIndex, setExpandedIndex] = useState(0);
+  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
   const postsToShow = _posts.slice(0, 3);
   
-  // Efecto para cambiar la card expandida cada 3 segundos
   useEffect(() => {
-    const interval = setInterval(() => {
-      setExpandedIndex((prevIndex) => (prevIndex + 1) % postsToShow.length);
-    }, 3000); // Cambia cada 3 segundos
-    
+    let interval: NodeJS.Timeout;
+    if (isAutoPlaying) {
+      interval = setInterval(() => {
+        setExpandedIndex((prevIndex) => (prevIndex + 1) % postsToShow.length);
+      }, 2000);
+    }
     return () => clearInterval(interval);
-  }, [postsToShow.length]);
+  }, [postsToShow.length, isAutoPlaying]);
+
+  const handleMouseEnter = (index: number) => {
+    setIsAutoPlaying(false); // Pausa la animación automática
+    setExpandedIndex(index); // Expande la tarjeta seleccionada
+  };
+
+  const handleMouseLeave = () => {
+    setIsAutoPlaying(true); // Reanuda la animación automática
+  };
 
   return (
     <DashboardContent>
@@ -42,26 +73,23 @@ export function BlogView() {
         </Button>
       </Box>
 
-      <Box display="flex" alignItems="center" justifyContent="space-between" sx={{ mb: 5 }}>
-        {/* Comentado como en el original */}
-      </Box>
-
-      {/* Aquí cambiamos de Grid a Flex para tener más control sobre el ancho */}
       <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 3 }}>
         {postsToShow.map((post, index) => {
-          const latestPostLarge = index === 0;
-          const latestPost = index === 1 || index === 2;
           const isExpanded = index === expandedIndex;
+          const colorScheme = colorSchemes[index % colorSchemes.length];
 
           return (
             <Box
               key={post.id}
+              onMouseEnter={() => handleMouseEnter(index)}
+              onMouseLeave={handleMouseLeave}
               sx={{
                 width: isExpanded ? '60%' : '18%',
                 flexGrow: isExpanded ? 1 : 0,
                 flexShrink: 0,
+                height: '400px',
                 transition: 'all 0.8s ease-in-out',
-                height: '400px', // Altura fija para todas las cards
+                overflow: 'hidden',
                 '@media (max-width: 900px)': {
                   width: isExpanded ? '100%' : '45%',
                 },
@@ -70,17 +98,10 @@ export function BlogView() {
                 }
               }}
             >
-              <PostItem 
-                post={post} 
-                latestPost={latestPost} 
-                latestPostLarge={latestPostLarge} 
-                sx={{
-                  height: '100%',
-                  transition: 'box-shadow 0.8s ease-in-out',
-                  position: 'relative',
-                  zIndex: isExpanded ? 10 : 1,
-                  boxShadow: isExpanded ? '0 8px 24px rgba(0,0,0,0.15)' : '0 2px 8px rgba(0,0,0,0.1)'
-                }}
+              <ColorfulPostItem 
+                post={post}
+                colors={colorScheme}
+                expanded={isExpanded}
               />
             </Box>
           );
