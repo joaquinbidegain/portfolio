@@ -1,5 +1,5 @@
 // src/types.ts
-export interface Post {
+export interface TypePost {
     id: string;
     title: string;
     description: string;

@@ -5,7 +5,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 
-import { _posts } from 'src/_mock/cvData';
+import { usePosts } from 'src/_mock/cvData';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { Iconify } from 'src/components/iconify';
 import { ColorfulPostItem } from '../color-item';
@@ -37,7 +37,9 @@ const colorSchemes: Colors[] = [
 export function BlogView() {
   const [expandedIndex, setExpandedIndex] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
-  const postsToShow = _posts.slice(0, 3);
+  const posts = usePosts();
+
+  const postsToShow = posts.slice(0, 3);
   
   useEffect(() => {
     let interval: NodeJS.Timeout;

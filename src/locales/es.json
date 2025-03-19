@@ -1,0 +1,29 @@
+{
+  "posts": [
+    {
+      "title": "Desarrollador Java Backend - Interfase",
+      "description": "Trabajo en Interfase desde Octubre 2022, desarrollando aplicaciones en Java con Spring Boot, implementando despliegues en servidores Linux y garantizando la seguridad en el desarrollo.",
+      "category": "Trabajo"
+    },
+    {
+      "title": "Ingeniería en Computación - UDELAR",
+      "description": "Actualmente cursando el 3er año en la Facultad de Ingeniería, con enfoque en sistemas, desarrollo de software y metodologías ágiles.",
+      "category": "Estudios"
+    },
+    {
+      "title": "Cursos y Certificaciones",
+      "description": "Formación en Desarrollo Web, Front-End con ReactJS y Machine Learning. Actualización constante para mejorar habilidades en el desarrollo de software.",
+      "category": "Estudios"
+    },
+    {
+      "title": "Skills y Tecnologías",
+      "description": "Experiencia en Java (Spring, Maven, Gradle), Git, Linux, Python, C++, JavaScript y ReactJS, entre otros.",
+      "category": "Skills"
+    },
+    {
+      "title": "Proyectos Open Source",
+      "description": "He desarrollado proyectos personales en GitHub, incluyendo herramientas en Python y sistemas de validación de distribuciones.",
+      "category": "Proyectos"
+    }
+  ]
+}

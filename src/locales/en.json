@@ -1,0 +1,29 @@
+{
+  "posts": [
+    {
+      "title": "Java Backend Developer - Interfase",
+      "description": "Working at Interfase since October 2022, developing Java applications with Spring Boot, implementing deployments on Linux servers and ensuring security in development.",
+      "category": "Work"
+    },
+    {
+      "title": "Computer Engineering - UDELAR",
+      "description": "Currently in my 3rd year at the Faculty of Engineering, focusing on systems, software development and agile methodologies.",
+      "category": "Studies"
+    },
+    {
+      "title": "Courses and Certifications",
+      "description": "Training in Web Development, Front-End with ReactJS and Machine Learning. Constant updating to improve skills in software development.",
+      "category": "Studies"
+    },
+    {
+      "title": "Skills and Technologies",
+      "description": "Experience in Java (Spring, Maven, Gradle), Git, Linux, Python, C++, JavaScript and ReactJS, among others.",
+      "category": "Skills"
+    },
+    {
+      "title": "Open Source Projects",
+      "description": "I have developed personal projects on GitHub, including tools in Python and distribution validation systems.",
+      "category": "Projects"
+    }
+  ]
+}

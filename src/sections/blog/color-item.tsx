@@ -1,87 +1,32 @@
+import React from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import { Post } from 'src/types/post';
+import { TypePost,Colors } from 'src/types/post';
 
-interface Colors {
-  main: string;
-  light: string;
-  pattern: string;
+import { useTranslation } from 'react-i18next'; // Importa useTranslation
+import '../../i18n'; // Asegúrate de que la ruta a i18n.js sea correcta
+
+
+interface TranslatedPost {
+  id: string;
+  title: string;
+  description: string;
+  category: "Trabajo" | "Estudios" | "Skills" | "Proyectos";
 }
 
-// Componente SVG para el patrón decorativo elegante
-const CardPattern = ({ color, opacity = 0.2 }: { color: string; opacity?: number }) => (
-  <Box
-    component="svg"
-    viewBox="0 0 100 100"
-    xmlns="http://www.w3.org/2000/svg"
-    sx={{
-      position: 'absolute',
-      top: 0,
-      right: 0,
-      width: '140px',
-      height: '140px',
-      opacity,
-      overflow: 'hidden',
-    }}
-  >
-    {/* Fondo de ondas suaves */}
-    <path
-      d="M0 100 Q25 80 50 100 T100 100"
-      fill="none"
-      stroke={color}
-      strokeWidth="1"
-      opacity="0.5"
-    />
-    <path
-      d="M0 90 Q30 70 60 90 T100 90"
-      fill="none"
-      stroke={color}
-      strokeWidth="1"
-      opacity="0.3"
-    />
-
-    {/* Círculos concéntricos con gradiente */}
-    <circle
-      cx="80"
-      cy="20"
-      r="20"
-      fill="none"
-      stroke={color}
-      strokeWidth="1.5"
-      opacity="0.8"
-    />
-    <circle
-      cx="80"
-      cy="20"
-      r="15"
-      fill="none"
-      stroke={color}
-      strokeWidth="1"
-      opacity="0.6"
-    />
-
-    {/* Líneas curvas decorativas */}
-    <path
-      d="M70 10 Q85 0 100 10"
-      fill="none"
-      stroke={color}
-      strokeWidth="0.8"
-      opacity="0.7"
-    />
-    <path
-      d="M65 25 Q80 15 95 25"
-      fill="none"
-      stroke={color}
-      strokeWidth="0.6"
-      opacity="0.5"
-    />
-  </Box>
-);
 
 // Componente principal
-export function ColorfulPostItem({ post, colors, expanded }: { post: Post; colors: Colors; expanded: boolean }) {
+export function ColorfulPostItem({ post, colors, expanded }: { post: TypePost; colors: Colors; expanded: boolean }) {
+  const { t, i18n } = useTranslation();
+
+  // Obtener traducciones de los posts desde el archivo JSON
+  const translatedPosts = t('posts', { returnObjects: true }) as TranslatedPost[] || [];
+
+  // Buscar el post traducido por id
+  const postTranslated = translatedPosts.find(translatedPost => translatedPost.id === post.id);
+
   return (
     <Card
       sx={{
@@ -94,8 +39,6 @@ export function ColorfulPostItem({ post, colors, expanded }: { post: Post; color
         boxShadow: expanded ? '0 8px 24px rgba(0,0,0,0.2)' : '0 2px 8px rgba(0,0,0,0.1)',
       }}
     >
-      <CardPattern color={colors.pattern} opacity={expanded ? 0.3 : 0.15} />
-      
       <Box
         sx={{
           position: 'absolute',
@@ -117,7 +60,7 @@ export function ColorfulPostItem({ post, colors, expanded }: { post: Post; color
         </Typography>
         
         <Typography variant="h5" sx={{ mt: 1, mb: 2, fontWeight: 'bold' }}>
-          {post.title}
+          {postTranslated ? postTranslated.title : post.title}
         </Typography>
         
         <Typography 
@@ -131,28 +74,11 @@ export function ColorfulPostItem({ post, colors, expanded }: { post: Post; color
             overflow: 'hidden',
           }}
         >
-          {post.description}
+          {postTranslated ? postTranslated.description : post.description}
         </Typography>
         
-        <Box 
-          sx={{ 
-            display: 'flex', 
-            alignItems: 'center', 
-            mt: 'auto', // Empuja la Box hacia la parte inferior
-            opacity: expanded ? 1 : 0.5,
-            transition: 'opacity 0.8s ease-in-out',
-          }}
-        >
-          <Box 
-            component="img" 
-            src={post.author.avatarUrl} 
-            sx={{ 
-              width: 32, 
-              height: 32, 
-              borderRadius: '50%',
-              mr: 1
-            }} 
-          />
+        <Box sx={{ display: 'flex', alignItems: 'center', mt: 'auto', opacity: expanded ? 1 : 0.5 }}>
+          <Box component="img" src={post.author.avatarUrl} sx={{ width: 32, height: 32, borderRadius: '50%', mr: 1 }} />
           <Typography variant="subtitle2">
             {post.author.name}
           </Typography>
