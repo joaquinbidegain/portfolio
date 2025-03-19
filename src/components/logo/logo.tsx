@@ -35,10 +35,10 @@ const LogoTextContainer = styled(Box)(({ theme }) => ({
 const LogoText = styled(Typography, {
   shouldForwardProp: (prop) => prop !== 'typing',
 })<{ typing: boolean }>(({ typing, theme }) => ({
-  fontWeight: 900,
+  fontWeight: 1200,
   letterSpacing: '.1rem',
   color: theme.palette.primary.main,
-  fontSize: '1.25rem',
+  fontSize: '1.50rem',
   position: 'relative',
   whiteSpace: 'nowrap',
   ...(typing && {
@@ -52,21 +52,27 @@ const LogoText = styled(Typography, {
 }));
 
 const Brace = styled('span')(({ theme }) => ({
-  fontWeight: 900,
+  fontWeight: 800,
   color: theme.palette.primary.main,
-  transition: 'transform 0.6s cubic-bezier(0.25, 0.1, 0.25, 1)',
+  transition: 'transform 0.6s cubic-bezier(0.25, 0.1, 0.25, 1), opacity 0.9s ease',
   display: 'inline-block',
   fontFamily: 'inherit',
   verticalAlign: 'middle',
   lineHeight: '1', // Evita alineaciones raras
   fontSize: 'inherit', // Mantiene coherencia con el texto principal
+  opacity: 1,
 
   '&:hover': {
     transform: 'scale(1.2)',
+    opacity: 0.9, // Ligero fade al hacer hover
+  },
+  '&:active': {
+    opacity: 0.8, // Un poco más de fade al hacer clic
   },
   '&::before, &::after': {
     visibility: 'hidden',
     opacity: 0,
+    transition: 'opacity 0.3s ease', // Transición también para estos elementos
   }
 }));
 
