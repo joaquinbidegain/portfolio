@@ -6,8 +6,6 @@ import CardContent from '@mui/material/CardContent';
 import { TypePost,Colors } from 'src/types/post';
 
 import { useTranslation } from 'react-i18next'; // Importa useTranslation
-import '../../i18n'; // Asegúrate de que la ruta a i18n.js sea correcta
-
 
 interface TranslatedPost {
   id: string;
@@ -19,7 +17,7 @@ interface TranslatedPost {
 
 // Componente principal
 export function ColorfulPostItem({ post, colors, expanded }: { post: TypePost; colors: Colors; expanded: boolean }) {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
 
   // Obtener traducciones de los posts desde el archivo JSON
   const translatedPosts = t('posts', { returnObjects: true }) as TranslatedPost[] || [];
