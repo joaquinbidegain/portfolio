@@ -1,6 +1,6 @@
 import type { Theme, SxProps, Breakpoint } from '@mui/material/styles';
 import { useState } from 'react';
-import { useLocation } from 'react-router-dom'; // Importamos useLocation
+import { useLocation } from 'react-router-dom';
 
 import Box from '@mui/material/Box';
 import Alert from '@mui/material/Alert';
@@ -35,13 +35,13 @@ export type DashboardLayoutProps = {
 
 export function DashboardLayout({ sx, children, header }: DashboardLayoutProps) {
   const theme = useTheme();
-  const location = useLocation(); // Hook para obtener la ruta actual
+  const location = useLocation();
   const [navOpen, setNavOpen] = useState(false);
 
   const layoutQuery: Breakpoint = 'lg';
-
-  // Determinar si mostrar el header según la ruta actual
-  const showHeader = location.pathname !== '/'; // Ocultar header en la raíz (/)
+  
+  // Comprobar si estamos en la ruta raíz
+  const isRootPath = location.pathname === '/';
 
   return (
     <LayoutSection
@@ -49,68 +49,68 @@ export function DashboardLayout({ sx, children, header }: DashboardLayoutProps) 
        * Header
        *************************************** */
       headerSection={
-        showHeader && ( // Mostrar el header solo si showHeader es true
-          <HeaderSection
-            layoutQuery={layoutQuery}
-            slotProps={{
-              container: {
-                maxWidth: false,
-                sx: { px: { [layoutQuery]: 5 } },
-              },
-            }}
-            sx={header?.sx}
-            slots={{
-              topArea: (
-                <Alert severity="info" sx={{ display: 'none', borderRadius: 0 }}>
-                  This is an info Alert.
-                </Alert>
-              ),
-              leftArea: (
-                <>
-                  <MenuButton
-                    onClick={() => setNavOpen(true)}
-                    sx={{
-                      ml: -1,
-                      [theme.breakpoints.up(layoutQuery)]: { display: 'none' },
-                    }}
-                  />
-                  <NavMobile
-                    data={navData}
-                    open={navOpen}
-                    onClose={() => setNavOpen(false)}
-                    workspaces={_workspaces}
-                  />
-                </>
-              ),
-              rightArea: (
-                <Box gap={1} display="flex" alignItems="center">
-                  {/* <Searchbar /> */}
-                  <LanguagePopover data={_langs} />
-                  {/* <NotificationsPopover data={_notifications} /> */}
-                  {/* <AccountPopover
-                    data={[
-                      {
-                        label: 'Home',
-                        href: '/',
-                        icon: <Iconify width={22} icon="solar:home-angle-bold-duotone" />,
-                      },
-                      {
-                        label: 'Profile',
-                        href: '#',
-                        icon: <Iconify width={22} icon="solar:shield-keyhole-bold-duotone" />,
-                      },
-                      {
-                        label: 'Settings',
-                        href: '#',
-                        icon: <Iconify width={22} icon="solar:settings-bold-duotone" />,
-                      },
-                    ]}
-                  /> */}
-                </Box>
-              ),
-            }}
-          />
-        )
+        <HeaderSection
+          layoutQuery={layoutQuery}
+          isFloating={isRootPath} // Usar la nueva propiedad para indicar si debe ser flotante
+          slotProps={{
+            container: {
+              maxWidth: false,
+              sx: { px: { [layoutQuery]: 5 } },
+            },
+          }}
+          sx={header?.sx}
+          slots={{
+            topArea: (
+              <Alert severity="info" sx={{ display: 'none', borderRadius: 0 }}>
+                This is an info Alert.
+              </Alert>
+            ),
+            leftArea: (
+              <>
+                <MenuButton
+                  onClick={() => setNavOpen(true)}
+                  sx={{
+                    ml: -1,
+                    [theme.breakpoints.up(layoutQuery)]: { display: 'none' },
+                    ...(isRootPath && { bgcolor: 'transparent' })
+                  }}
+                />
+                <NavMobile
+                  data={navData}
+                  open={navOpen}
+                  onClose={() => setNavOpen(false)}
+                  workspaces={_workspaces}
+                />
+              </>
+            ),
+            rightArea: (
+              <Box gap={1} display="flex" alignItems="center">
+                {/* <Searchbar /> */}
+                <LanguagePopover data={_langs} />
+                {/* <NotificationsPopover data={_notifications} /> */}
+                {/* <AccountPopover
+                  data={[
+                    {
+                      label: 'Home',
+                      href: '/',
+                      icon: <Iconify width={22} icon="solar:home-angle-bold-duotone" />,
+                    },
+                    {
+                      label: 'Profile',
+                      href: '#',
+                      icon: <Iconify width={22} icon="solar:shield-keyhole-bold-duotone" />,
+                    },
+                    {
+                      label: 'Settings',
+                      href: '#',
+                      icon: <Iconify width={22} icon="solar:settings-bold-duotone" />,
+                    },
+                  ]}
+                /> */}
+              </Box>
+            ),
+          }}
+        />
       }
       /** **************************************
        * Sidebar
@@ -127,35 +127,25 @@ export function DashboardLayout({ sx, children, header }: DashboardLayoutProps) 
        *************************************** */
       cssVars={{
         '--layout-nav-vertical-width': '300px',
-        '--layout-dashboard-content-pt': theme.spacing(1),
+        '--layout-dashboard-content-pt': isRootPath ? '0px' : theme.spacing(1),
         '--layout-dashboard-content-pb': theme.spacing(8),
         '--layout-dashboard-content-px': theme.spacing(5),
       }}
       sx={{
         [`& .${layoutClasses.hasSidebar}`]: {
           [theme.breakpoints.up(layoutQuery)]: {
-            pl: 'var(--layout-nav-vertical-width)', // El sidebar siempre está presente
+            pl: 'var(--layout-nav-vertical-width)',
           },
         },
+        // Si es ruta raíz, ajustar el padding para compensar que el header es absoluto
+        ...(isRootPath && {
+          [`& .${layoutClasses.main}`]: {
+            pt: 0,
+          }
+        }),
         ...sx,
       }}
     >
-      {!showHeader && (
-        <MenuButton
-          onClick={() => setNavOpen(true)}
-          sx={{
-            ml: -1,
-            [theme.breakpoints.up(layoutQuery)]: { display: 'none' },
-            bgcolor: 'transparent', // Sin color de fondo en la versión móvil
-          }}
-        />
-      )}
-      <NavMobile
-        data={navData}
-        open={navOpen}
-        onClose={() => setNavOpen(false)}
-        workspaces={_workspaces}
-      />
       <Main>{children}</Main>
     </LayoutSection>
   );
