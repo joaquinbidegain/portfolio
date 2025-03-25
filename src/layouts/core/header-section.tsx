@@ -17,6 +17,7 @@ import { layoutClasses } from '../classes';
 
 export type HeaderSectionProps = AppBarProps & {
   layoutQuery: Breakpoint;
+  isFloating?: boolean; // Nueva propiedad para indicar si debe ser flotante
   slots?: {
     leftArea?: React.ReactNode;
     rightArea?: React.ReactNode;
@@ -35,13 +36,16 @@ export function HeaderSection({
   slots,
   slotProps,
   layoutQuery = 'md',
+  isFloating = false, // Por defecto, no es flotante
   ...other
 }: HeaderSectionProps) {
   const theme = useTheme();
 
+  // Mantenemos el estilo original para todas las rutas que no son la raíz
   const toolbarStyles = {
     default: {
-      ...bgBlur({ color: varAlpha(theme.vars.palette.background.defaultChannel, 0.8) }),
+      // Si no es flotante, aplicamos el estilo original
+      ...(isFloating ? {} : bgBlur({ color: varAlpha(theme.vars.palette.background.defaultChannel, 0.8) })),
       minHeight: 'auto',
       height: 'var(--layout-header-mobile-height)',
       transition: theme.transitions.create(['height', 'background-color'], {
@@ -59,12 +63,13 @@ export function HeaderSection({
 
   return (
     <AppBar
-      position="sticky"
+      position={isFloating ? "absolute" : "sticky"}
       color="transparent"
       className={layoutClasses.header}
       sx={{
-        boxShadow: 'none',
+        boxShadow: isFloating ? 'none' : 'none', // Mantenemos 'none' para ambos casos como en el original
         zIndex: 'var(--layout-header-zIndex)',
+        width: '100%',
         ...sx,
       }}
       {...other}
@@ -76,6 +81,7 @@ export function HeaderSection({
         {...slotProps?.toolbar}
         sx={{
           ...toolbarStyles.default,
+          ...(isFloating && { backgroundColor: 'transparent' }),
           ...slotProps?.toolbar?.sx,
         }}
       >
