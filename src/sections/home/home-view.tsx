@@ -1,12 +1,6 @@
-import React from 'react';
 import { Box, Typography, Button, Container } from '@mui/material';
 import { styled } from '@mui/system';
-
-// Define the custom props for StyledCard
-interface StyledCardProps {
-  bgcolor?: string;
-  isWide?: boolean;
-}
+import React, { useState, useEffect } from 'react';
 
 // Styled container for the hero section
 const HeroContainer = styled(Box)(({ theme }) => ({
@@ -35,7 +29,7 @@ const BackgroundSVG = styled('svg')({
   height: '100%',
   zIndex: -1,
   '& #backgroundImage': {
-    animation: 'lavaFlow 8s ease-in-out infinite, opacityFlow 8s ease-in-out infinite, colorShift 8s ease-in-out infinite',
+    animation: 'lavaFlow 6s ease-in-out infinite, opacityFlow 2s ease-in-out infinite, colorShift 3s ease-in-out infinite',
     transformOrigin: 'center',
   },
   '@keyframes lavaFlow': {
@@ -72,22 +66,13 @@ const TextSection = styled(Box)(({ theme }) => ({
   [theme.breakpoints.up('lg')]: {
     textAlign: 'left',
     flex: 1,
-    maxWidth: '50%',
+    maxWidth: '80%',
   },
 }));
 
-// Styled text components
-const HeroTitle = styled(Typography)(({ theme }) => ({
-  fontWeight: 300,
-  fontSize: '2.5rem',
-  marginBottom: theme.spacing(2),
-  color: theme.palette.text.main,
-  [theme.breakpoints.up('sm')]: {
-    fontSize: '4.5rem',
-  },
-}));
 
 const HeroSubtitle = styled(Typography)(({ theme }) => ({
+  fontWeight: 600,
   fontSize: '1rem',
   color: theme.palette.text.secondary,
   marginBottom: theme.spacing(4),
@@ -106,78 +91,72 @@ const HeroButton = styled(Button)(({ theme }) => ({
   },
 }));
 
-// Styled container for the cards section
-const CardsSection = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  flexDirection: 'column',
-  gap: theme.spacing(2),
-  width: '100%',
-  padding: theme.spacing(2),
-  alignItems: 'center',
-  zIndex: 1, // Ensure cards are above the background
-  [theme.breakpoints.up('lg')]: {
-    flex: 1,
-    width: 'auto',
-    alignItems: 'flex-end',
-    maxWidth: '50%',
+// Estilo para el título con animación
+const HeroTitle = styled(Typography)(({ theme }) => ({
+  fontWeight: 700,
+  fontSize: '4.0rem',
+  marginBottom: theme.spacing(2),
+  color: theme.palette.primary.light,
+  [theme.breakpoints.up('sm')]: {
+    fontSize: '4.5rem',
+  },
+  '& .cursor': {
+    display: 'inline-block',
+    width: '0.5rem',
+    height: '4rem',
+    backgroundColor: theme.palette.primary.light,
+    verticalAlign: 'middle',
+    animation: 'blink 1s step-end infinite',
+    marginLeft: '4px',
+  },
+  '@keyframes blink': {
+    '50%': { opacity: 0 },
   },
 }));
 
-// Styled container for the top row of cards ("Work" and "About us")
-const TopCardsRow = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  flexDirection: 'column',
-  gap: theme.spacing(2),
-  width: '100%',
-  justifyContent: 'center',
-  [theme.breakpoints.up('lg')]: {
-    flexDirection: 'row',
-    width: '80%',
-    justifyContent: 'flex-end',
-  },
-  [theme.breakpoints.down('sm')]: {
-    flexDirection: 'column',
-    alignItems: 'center',
-  },
-}));
-
-// Styled component for individual cards with effects
-const StyledCard = styled(Box, {
-  shouldForwardProp: (prop) => prop !== 'bgcolor' && prop !== 'isWide',
-})<StyledCardProps>(({ theme, bgcolor, isWide }) => ({
-  width: '100%',
-  height: '150px',
-  borderRadius: '24px',
-  backgroundColor: bgcolor || '#fff',
-  display: 'flex',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-  padding: theme.spacing(2),
-  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
-  transition: 'all 0.3s ease-in-out',
-  '&:hover': {
-    transform: 'scale(1.05)',
-    boxShadow: '0 8px 24px rgba(0, 0, 0, 0.2)',
-    backgroundColor: bgcolor ? `${bgcolor}CC` : '#fff',
-  },
-  [theme.breakpoints.down('md')]: {
-    width: '100%',
-  },
-  [theme.breakpoints.down('sm')]: {
-    height: '150px',
-    padding: theme.spacing(1.5),
-  },
-  [theme.breakpoints.up('lg')]: {
-    width: isWide ? '80%' : 'auto',
-    flex: isWide ? 'none' : 1,
-    height: isWide ? '200px' : '150px',
-  },
-}));
+// Lista de textos para la animación
+const texts = [
+  "Soy Joaquin Bidegain.",
+  "Soy Joaco",
+  "Bienvenido a JoacoCodes.",
+];
 
 export function HomeView() {
+  const [displayedText, setDisplayedText] = useState('');
+  const [textIndex, setTextIndex] = useState(0);
+  const [charIndex, setCharIndex] = useState(0);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  useEffect(() => {
+    const currentText = texts[textIndex];
+    const typingSpeed = isDeleting ? 50 : 100; // Velocidad de escritura/borrado
+
+    const type = () => {
+      if (!isDeleting && charIndex < currentText.length) {
+        // Escribiendo
+        setDisplayedText(currentText.substring(0, charIndex + 1));
+        setCharIndex(charIndex + 1);
+      } else if (isDeleting && charIndex > 0) {
+        // Borrando
+        setDisplayedText(currentText.substring(0, charIndex - 1));
+        setCharIndex(charIndex - 1);
+      } else if (!isDeleting && charIndex === currentText.length) {
+        // Pausa antes de borrar
+        setTimeout(() => setIsDeleting(true), 2000);
+      } else if (isDeleting && charIndex === 0) {
+        // Cambiar al siguiente texto
+        setIsDeleting(false);
+        setTextIndex((prev) => (prev + 1) % texts.length);
+      }
+    };
+
+    const timer = setTimeout(type, typingSpeed);
+    return () => clearTimeout(timer);
+  }, [charIndex, isDeleting, textIndex]);
+
   return (
     <HeroContainer>
-      {/* SVG Background with Animation */}
+      {/* SVG Background con animación (sin cambios) */}
       <BackgroundSVG
         width="100%"
         height="100%"
@@ -197,7 +176,7 @@ export function HomeView() {
             width="1440"
             height="1080"
             preserveAspectRatio="none"
-            xlinkHref="/assets/background/svgoverlay.svg" // Your original image path
+            xlinkHref="/assets/background/svgoverlay.svg"
           />
         </defs>
       </BackgroundSVG>
@@ -209,11 +188,15 @@ export function HomeView() {
           alignItems="center"
           justifyContent={{ xs: 'center', lg: 'space-between' }}
         >
-          {/* Text Section */}
+          {/* Sección de texto */}
           <TextSection>
-            <HeroTitle variant="h1">¡Hola! Soy Joaquín Bidegain</HeroTitle>
-            <HeroSubtitle variant="subtitle1">
-              Bienvenido a mi portfolio web, el mismo es interactivo pruebalo!
+            <HeroTitle variant="h1">
+              ¡Hola!<br />
+              {displayedText}
+              <span className="cursor"> </span>
+            </HeroTitle>
+            <HeroSubtitle variant="h2">
+              Bienvenido a mi portfolio web, el mismo es interactivo ¡pruébalo!
             </HeroSubtitle>
             <Box>
               <HeroButton variant="contained" color="primary" sx={{ mr: 2 }}>
@@ -224,23 +207,6 @@ export function HomeView() {
               </HeroButton>
             </Box>
           </TextSection>
-
-          {/* Cards Section */}
-          <CardsSection>
-            <TopCardsRow>
-              <StyledCard bgcolor="#fff">
-                <Typography variant="h6">Work</Typography>
-              </StyledCard>
-              <StyledCard bgcolor="#2E2E2E">
-                <Typography variant="h6" color="white">
-                  About us
-                </Typography>
-              </StyledCard>
-            </TopCardsRow>
-            <StyledCard bgcolor="#FFD54F" isWide>
-              <Typography variant="h6">Contact us</Typography>
-            </StyledCard>
-          </CardsSection>
         </Box>
       </Container>
     </HeroContainer>

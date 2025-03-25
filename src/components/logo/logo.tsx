@@ -60,7 +60,7 @@ const Brace = styled('span')(({ theme }) => ({
   verticalAlign: 'middle',
   lineHeight: '1', // Evita alineaciones raras
   fontSize: 'inherit', // Mantiene coherencia con el texto principal
-  opacity: 1,
+  opacity: 0.8,
 
   '&:hover': {
     transform: 'scale(1.2)',
@@ -71,7 +71,7 @@ const Brace = styled('span')(({ theme }) => ({
   },
   '&::before, &::after': {
     visibility: 'hidden',
-    opacity: 0,
+    opacity: 1,
     transition: 'opacity 0.3s ease', // Transición también para estos elementos
   }
 }));

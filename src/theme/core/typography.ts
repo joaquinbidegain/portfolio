@@ -20,16 +20,16 @@ declare module '@mui/material/styles' {
 
 // ----------------------------------------------------------------------
 
-export const defaultFont = 'DM Sans Variable';
+export const defaultFont = 'Montserrat'; // Cambiamos a Montserrat
 
 export const primaryFont = setFont(defaultFont);
 
-export const secondaryFont = setFont('Barlow');
+export const secondaryFont = setFont('Poppins'); // Dejamos Barlow como secundaria, puedes cambiarla si deseas
 
 // ----------------------------------------------------------------------
 
 export const typography: TypographyOptions = {
-  fontFamily: primaryFont,
+  fontFamily: primaryFont, // Usamos Montserrat como fuente principal
   fontSecondaryFamily: secondaryFont,
   fontWeightLight: '300',
   fontWeightRegular: '400',
@@ -40,21 +40,21 @@ export const typography: TypographyOptions = {
     fontWeight: 800,
     lineHeight: 80 / 64,
     fontSize: pxToRem(40),
-    fontFamily: secondaryFont,
+    fontFamily: primaryFont, 
     ...responsiveFontSizes({ sm: 52, md: 58, lg: 64 }),
   },
   h2: {
     fontWeight: 800,
     lineHeight: 64 / 48,
     fontSize: pxToRem(32),
-    fontFamily: secondaryFont,
+    fontFamily: secondaryFont, // Mantiene Barlow para h2, cambia a primaryFont si quieres Montserrat
     ...responsiveFontSizes({ sm: 40, md: 44, lg: 48 }),
   },
   h3: {
     fontWeight: 700,
     lineHeight: 1.5,
     fontSize: pxToRem(24),
-    fontFamily: secondaryFont,
+    fontFamily: secondaryFont, // Mantiene Barlow para h3, cambia a primaryFont si quieres Montserrat
     ...responsiveFontSizes({ sm: 26, md: 30, lg: 32 }),
   },
   h4: {
