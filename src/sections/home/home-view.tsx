@@ -1,6 +1,10 @@
 import { Box, Typography, Button, Container } from '@mui/material';
 import { styled } from '@mui/system';
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom'; // Importa Link de react-router-dom
+import { useTranslation } from 'react-i18next';
+import BackgroundSVGComponent from '../../components/BackgroundSVG';
+
 
 // Styled container for the hero section
 const HeroContainer = styled(Box)(({ theme }) => ({
@@ -20,42 +24,6 @@ const HeroContainer = styled(Box)(({ theme }) => ({
   },
 }));
 
-// Styled SVG wrapper to ensure it fills the background
-const BackgroundSVG = styled('svg')({
-  position: 'absolute',
-  top: 0,
-  left: 0,
-  width: '100%',
-  height: '100%',
-  zIndex: -1,
-  '& #backgroundImage': {
-    animation: 'lavaFlow 6s ease-in-out infinite, opacityFlow 2s ease-in-out infinite, colorShift 3s ease-in-out infinite',
-    transformOrigin: 'center',
-  },
-  '@keyframes lavaFlow': {
-    '0%': { transform: 'translate(0, 0) scale(1,1)' },
-    '25%': { transform: 'translate(150px, 150px) scale(1.8, 1.3)' },
-    '50%': { transform: 'translate(-150px, -150px) scale(1.3, 1.5)' },
-    '75%': { transform: 'translate(100px, -100px) scale(1.5, 1.2)' },
-    '100%': { transform: 'translate(0, 0) scale(1,1)' },
-  },
-  '@keyframes opacityFlow': {
-    '0%': { opacity: 0.8 },
-    '50%': { opacity: 1 },
-    '100%': { opacity: 0.8 },
-  },
-  '@keyframes blurEffect': {
-    '0%': { filter: 'blur(10px) hue-rotate(0deg)' },
-    '50%': { filter: 'blur(15px) hue-rotate(45deg)' },
-    '100%': { filter: 'blur(10px) hue-rotate(0deg)' },
-  },
-  '@keyframes colorShift': {
-    '0%': { fill: '#ff4500' },
-    '50%': { fill: '#ff6347' },
-    '100%': { fill: '#ff4500' },
-  },
-});
-
 
 // Styled text section
 const TextSection = styled(Box)(({ theme }) => ({
@@ -66,7 +34,7 @@ const TextSection = styled(Box)(({ theme }) => ({
   [theme.breakpoints.up('lg')]: {
     textAlign: 'left',
     flex: 1,
-    maxWidth: '80%',
+    maxWidth: '90%',
   },
 }));
 
@@ -81,7 +49,7 @@ const HeroSubtitle = styled(Typography)(({ theme }) => ({
   },
 }));
 
-const HeroButton = styled(Button)(({ theme }) => ({
+const HeroButton = styled(Button)<{ component?: React.ElementType; to?: string }>(({ theme }) => ({
   padding: theme.spacing(1.5, 3),
   fontSize: '0.9rem',
   margin: theme.spacing(0, 1),
@@ -114,37 +82,31 @@ const HeroTitle = styled(Typography)(({ theme }) => ({
   },
 }));
 
-// Lista de textos para la animación
-const texts = [
-  "Soy Joaquin Bidegain.",
-  "Soy Joaco",
-  "Bienvenido a JoacoCodes.",
-];
 
 export function HomeView() {
+  const { t } = useTranslation();
   const [displayedText, setDisplayedText] = useState('');
   const [textIndex, setTextIndex] = useState(0);
   const [charIndex, setCharIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
 
+  // Obtiene los textos traducidos
+  const texts: string[] = t('hero.titles', { returnObjects: true }) as string[];
+  
   useEffect(() => {
     const currentText = texts[textIndex];
-    const typingSpeed = isDeleting ? 50 : 100; // Velocidad de escritura/borrado
+    const typingSpeed = isDeleting ? 70 : 100;
 
     const type = () => {
       if (!isDeleting && charIndex < currentText.length) {
-        // Escribiendo
         setDisplayedText(currentText.substring(0, charIndex + 1));
         setCharIndex(charIndex + 1);
       } else if (isDeleting && charIndex > 0) {
-        // Borrando
         setDisplayedText(currentText.substring(0, charIndex - 1));
         setCharIndex(charIndex - 1);
       } else if (!isDeleting && charIndex === currentText.length) {
-        // Pausa antes de borrar
         setTimeout(() => setIsDeleting(true), 2000);
       } else if (isDeleting && charIndex === 0) {
-        // Cambiar al siguiente texto
         setIsDeleting(false);
         setTextIndex((prev) => (prev + 1) % texts.length);
       }
@@ -152,34 +114,13 @@ export function HomeView() {
 
     const timer = setTimeout(type, typingSpeed);
     return () => clearTimeout(timer);
-  }, [charIndex, isDeleting, textIndex]);
+  }, [charIndex, isDeleting, textIndex, texts]);
+
 
   return (
     <HeroContainer>
       {/* SVG Background con animación (sin cambios) */}
-      <BackgroundSVG
-        width="100%"
-        height="100%"
-        viewBox="0 0 1440 1080"
-        fill="none"
-        preserveAspectRatio="xMidYMid slice"
-        xmlns="http://www.w3.org/2000/svg"
-        xmlnsXlink="http://www.w3.org/1999/xlink"
-      >
-        <rect width="1440" height="1080" fill="url(#pattern0_1_2)" fillOpacity="0.44" />
-        <defs>
-          <pattern id="pattern0_1_2" patternContentUnits="objectBoundingBox" width="1" height="1">
-            <use xlinkHref="#backgroundImage" transform="scale(0.00069990 0.000989999)" />
-          </pattern>
-          <image
-            id="backgroundImage"
-            width="1440"
-            height="1080"
-            preserveAspectRatio="none"
-            xlinkHref="/assets/background/svgoverlay.svg"
-          />
-        </defs>
-      </BackgroundSVG>
+      <BackgroundSVGComponent />
 
       <Container maxWidth="lg">
         <Box
@@ -191,19 +132,24 @@ export function HomeView() {
           {/* Sección de texto */}
           <TextSection>
             <HeroTitle variant="h1">
-              ¡Hola!<br />
+              {t('hero.greeting')}<br />
               {displayedText}
               <span className="cursor"> </span>
             </HeroTitle>
             <HeroSubtitle variant="h2">
-              Bienvenido a mi portfolio web, el mismo es interactivo ¡pruébalo!
+              {t('hero.subtitle')}
             </HeroSubtitle>
             <Box>
               <HeroButton variant="contained" color="primary" sx={{ mr: 2 }}>
-                Explorar
+                {t('hero.buttons.explore')}
               </HeroButton>
-              <HeroButton variant="outlined" color="primary">
-                Contáctame
+              <HeroButton
+                variant="outlined"
+                color="primary"
+                component={Link} // Usa el componente Link
+                to="/contact" // Especifica la ruta de redirección
+              >             
+                {t('hero.buttons.contact')}
               </HeroButton>
             </Box>
           </TextSection>

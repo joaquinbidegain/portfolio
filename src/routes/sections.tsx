@@ -7,6 +7,7 @@ import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgr
 import { varAlpha } from 'src/theme/styles';
 import { AuthLayout } from 'src/layouts/auth';
 import { DashboardLayout } from 'src/layouts/dashboard';
+import { c } from 'framer-motion/dist/types.d-6pKw1mTI';
 
 // ----------------------------------------------------------------------
 
@@ -17,6 +18,7 @@ export const UserPage = lazy(() => import('src/pages/user'));
 export const SignInPage = lazy(() => import('src/pages/sign-in'));
 export const ProductsPage = lazy(() => import('src/pages/products'));
 export const Page404 = lazy(() => import('src/pages/page-not-found'));
+export const ContactPage = lazy(() => import('src/pages/contact'));
 
 // ----------------------------------------------------------------------
 
@@ -49,6 +51,7 @@ export function Router() {
         { path: 'products', element: <ProductsPage /> },
         { path: 'blog', element: <BlogPage /> },
         { path: 'dashboard', element: <DashboardPage /> }, 
+        { path: 'contact' , element: <ContactPage /> },
       ],
     },
     {

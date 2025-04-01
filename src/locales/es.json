@@ -25,5 +25,18 @@
       "description": "He desarrollado proyectos personales en GitHub, incluyendo herramientas en Python y sistemas de validación de distribuciones.",
       "category": "Proyectos"
     }
-  ]
+  ],
+  "hero": {
+    "greeting": "¡Hola!",
+    "titles": [
+      "Soy Joaquin Bidegain.",
+      "Soy Joaco",
+      "Bienvenido a JoacoCodes."
+    ],
+    "subtitle": "Bienvenido a mi portfolio web, el mismo es interactivo ¡pruébalo!",
+    "buttons": {
+      "explore": "Explorar",
+      "contact": "Contáctame"
+    }
+  }
 }

@@ -34,7 +34,7 @@ export function ColorfulPostItem({ post, colors, expanded }: { post: TypePost; c
         position: 'relative',
         overflow: 'hidden',
         transition: 'all 0.8s ease-in-out',
-        boxShadow: expanded ? '0 8px 24px rgba(0,0,0,0.2)' : '0 2px 8px rgba(0,0,0,0.1)',
+        boxShadow: expanded ? '0 8px 24px rgba(0, 0, 0, 0)' : '0 2px 8px rgba(0, 0, 0, 0)',
       }}
     >
       <Box

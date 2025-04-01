@@ -41,7 +41,7 @@ export function DashboardLayout({ sx, children, header }: DashboardLayoutProps) 
   const layoutQuery: Breakpoint = 'lg';
   
   // Comprobar si estamos en la ruta raíz
-  const isRootPath = location.pathname === '/';
+  const isRootPath = location.pathname === '/' || location.pathname === '/contact';
 
   return (
     <LayoutSection
