@@ -1,29 +1,45 @@
 {
-  "posts": [
+  "main_topics": [
     {
-      "title": "Java Backend Developer - Interfase",
-      "description": "Working at Interfase since October 2022, developing Java applications with Spring Boot, implementing deployments on Linux servers and ensuring security in development.",
-      "category": "Work"
+      "id": "work-experience",
+      "title": "Work Experience",
+      "description": "My professional experiences in software development and related technologies.",
+      "posts": [
+        {
+          "id": "java-interfase",
+          "title": "Java Backend Developer - Interfase",
+          "description": "Working at Interfase since October 2022, developing Java applications with Spring Boot, implementing deployments on Linux servers and ensuring security in development."
+        }
+      ]
     },
     {
-      "title": "Computer Engineering - UDELAR",
-      "description": "Currently in my 3rd year at the Faculty of Engineering, focusing on systems, software development and agile methodologies.",
-      "category": "Studies"
+      "id": "education",
+      "title": "Education",
+      "description": "My academic background and complementary courses in the tech field.",
+      "posts": [
+        {
+          "id": "ingenieria-udelar",
+          "title": "Computer Engineering - UDELAR",
+          "description": "Currently in my 3rd year at the Faculty of Engineering, focusing on systems, software development and agile methodologies."
+        },
+        {
+          "id": "cursos-certificaciones",
+          "title": "Courses and Certifications",
+          "description": "Training in Web Development, Front-End with ReactJS and Machine Learning. Constant updating to improve skills in software development."
+        }
+      ]
     },
     {
-      "title": "Courses and Certifications",
-      "description": "Training in Web Development, Front-End with ReactJS and Machine Learning. Constant updating to improve skills in software development.",
-      "category": "Studies"
-    },
-    {
-      "title": "Skills and Technologies",
-      "description": "Experience in Java (Spring, Maven, Gradle), Git, Linux, Python, C++, JavaScript and ReactJS, among others.",
-      "category": "Skills"
-    },
-    {
-      "title": "Open Source Projects",
-      "description": "I have developed personal projects on GitHub, including tools in Python and distribution validation systems.",
-      "category": "Projects"
+      "id": "skills",
+      "title": "Skills",
+      "description": "Technologies and tools I master and use in my projects.",
+      "posts": [
+        {
+          "id": "skills-tecnologias",
+          "title": "Skills and Technologies",
+          "description": "Experience in Java (Spring, Maven, Gradle), Git, Linux, Python, C++, JavaScript and ReactJS, among others."
+        }
+      ]
     }
   ],
   "hero": {
@@ -36,7 +52,20 @@
     "subtitle": "Welcome to my web portfolio, it's interactive - try it!",
     "buttons": {
       "explore": "Explore",
-      "contact": "Contact me"
+      "contact": "Contact Me"
     }
-  }
+  },
+  "blog_welcome_title": "Welcome to my Blog!",
+  "blog_welcome_description_1": "Here I share my thoughts, experiences, and learnings about web development, technology, and other topics I'm passionate about. Explore my articles and feel free to leave your comments.",
+  "blog_welcome_description_2": "Each card represents a different section - hover over them for a summary or click to see more details.",
+  "more_content_title": "More about my Content",
+  "more_content_description_1": "In this blog, you'll find technical articles, reflections on software development, and practical tutorials. My goal is to share knowledge and learn alongside the community.",
+  "more_content_description_2": "If you're interested in a particular topic or have any suggestions, don't hesitate to contact me through my social media.",
+  "collaborate_title": "Would you like to collaborate?",
+  "collaborate_description": "If you have an idea for an article or would like to collaborate on a project, please don't hesitate to get in touch! I'd love to work with you.",
+  "contact_me_button": "Contact Me",
+  "project_details_title": "Project Details",
+  "case_study_title": "Case Study",
+  "skills_section_title": "Skills",
+  "skills_section_description": "Technologies and tools that I master and use in my development projects."
 }

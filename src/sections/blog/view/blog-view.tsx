@@ -1,54 +1,68 @@
-import { useState, useEffect } from 'react';
-
+import { useState, useEffect, useRef } from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-
-import { usePosts } from 'src/_mock/cvData';
+import Grid from '@mui/material/Grid';
+import Paper from '@mui/material/Paper';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { Iconify } from 'src/components/iconify';
-import BackgroundSVGComponent from 'src/components/BackgroundSVG';
+import { useTranslation } from 'react-i18next';
 import { ColorfulPostItem } from '../color-item';
 
+// Definición de tipos
 interface Colors {
   main: string;
   light: string;
   pattern: string;
 }
 
+interface Technology {
+  name: string;
+  logo: string;
+}
+
+interface MainTopic {
+  id: string;
+  title: string;
+  description: string;
+  posts: { id: string; title: string; description: string }[];
+}
+
 const colorSchemes: Colors[] = [
-  {
-    main: 'primary.main',
-    light: 'primary.lighter',
-    pattern: 'primary.dark'
-  },
-  {
-    main: 'secondary.main',
-    light: 'secondary.lighter',
-    pattern: 'secondary.dark'
-  },
-  {
-    main: 'info.main',
-    light: 'info.lighter',
-    pattern: 'info.dark'
-  }
+  { main: 'primary.main', light: 'primary.lighter', pattern: 'primary.dark' },
+  { main: 'secondary.main', light: 'secondary.lighter', pattern: 'secondary.dark' },
+  { main: 'info.main', light: 'info.lighter', pattern: 'info.dark' },
+];
+
+const technologies: Technology[] = [
+  { name: 'Java', logo: 'logos:java' },
+  { name: 'Spring Boot', logo: 'logos:spring-icon' },
+  { name: 'Maven', logo: 'logos:maven' },
+  { name: 'Gradle', logo: 'logos:gradle' },
+  { name: 'Git', logo: 'logos:git-icon' },
+  { name: 'Linux', logo: 'logos:linux-tux' },
+  { name: 'JavaScript', logo: 'logos:javascript' },
+  { name: 'TypeScript', logo: 'logos:typescript-icon' },
+  { name: 'React', logo: 'logos:react' },
 ];
 
 export function BlogView() {
-  const [expandedIndex, setExpandedIndex] = useState(0);
-  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
-  const posts = usePosts();
-  const postsToShow = posts.slice(0, 3);
-  
+  const { t } = useTranslation();
+  const [expandedIndex, setExpandedIndex] = useState<number>(0);
+  const [isAutoPlaying, setIsAutoPlaying] = useState<boolean>(true);
+
+  const mainTopics: MainTopic[] = t('main_topics', { returnObjects: true }) as MainTopic[];
+  const topicsToShow: MainTopic[] = mainTopics.slice(0, 3);
+
   useEffect(() => {
     let interval: NodeJS.Timeout;
     if (isAutoPlaying) {
       interval = setInterval(() => {
-        setExpandedIndex((prevIndex) => (prevIndex + 1) % postsToShow.length);
+        setExpandedIndex((prevIndex) => (prevIndex + 1) % topicsToShow.length);
       }, 2000);
     }
     return () => clearInterval(interval);
-  }, [postsToShow.length, isAutoPlaying]);
+  }, [topicsToShow.length, isAutoPlaying]);
 
   const handleMouseEnter = (index: number) => {
     setIsAutoPlaying(false);
@@ -59,131 +73,170 @@ export function BlogView() {
     setIsAutoPlaying(true);
   };
 
+  const sectionRefs = {
+    post1: useRef<HTMLDivElement>(null),
+    post2: useRef<HTMLDivElement>(null),
+    post3: useRef<HTMLDivElement>(null),
+    skills: useRef<HTMLDivElement>(null),
+  };
+
+  const handleCardClick = (index: number) => {
+    const targetSection = index === 2 ? 'skills' : `post${index + 1}`;
+    sectionRefs[targetSection as keyof typeof sectionRefs].current?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start',
+    });
+  };
+
   return (
     <DashboardContent>
-      <Box display="flex" alignItems="center" mb={5}>
-        <Typography variant="h4" flexGrow={1}>
-          Blog
-        </Typography>
-        <Button
-          variant="contained"
-          color="inherit"
-          startIcon={<Iconify icon="mingcute:add-line" />}
-        >
-          New post
-        </Button>
-      </Box>
-
-      {/* Sección de descripción personal con fondo SVG */}
-      <Box sx={{ mb: 3 }}>
-        <Box
-          sx={{
-            position: 'relative',
-            width: '100%',
-            height: '400px',
-            padding: 2,
-            borderRadius: 1,
-            overflow: 'hidden',
-            transition: 'all 0.8s ease-in-out',
-            backgroundColor: 'rgba(255, 255, 255, 0.1)', // Fondo semitransparente
-            backdropFilter: 'blur(5px)', // Efecto de desenfoque para profundidad
-            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)', // Sombra suave
-            animation: 'float 7s ease-in-out infinite', // Animación de flotación
-            '@media (max-width: 900px)': {
-              width: '45%',
-            },
-            '@media (max-width: 600px)': {
-              width: '100%',
-            },
-            '@keyframes float': {
-              '0%': { transform: 'translateY(0px)' },
-              '50%': { transform: 'translateY(-10px)' },
-              '100%': { transform: 'translateY(0px)' },
-            },
-          }}
-        >
-          <BackgroundSVGComponent /> {/* Fondo SVG */}
-          
-          {/* Card estilo “reproductor” */}
-          <Box
-            sx={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              width: '100%',
-              height: '100%',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              zIndex: 1,
-            }}
-          >
-            <Box
-             sx={{
-              position: 'absolute',
-              top: '50%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
-              width: 320,
-              height: 300,
-              bgcolor: 'rgba(0, 0, 0, 0.6)', // Fondo oscuro semi-transparente
-              backdropFilter: 'blur(10px)', // Desenfoque para un efecto de vidrio esmerilado
-              borderRadius: 2,
-              boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)', // Sombra más pronunciada para realce
-              p: 2,
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              color: 'white', // Texto blanco para contraste
-            }}
-            >
-              <Typography variant="subtitle1" fontWeight="bold">
-                Aquí podrías poner tu título o texto principal
-              </Typography>
-              <Typography variant="body2" sx={{ mt: 1, mb: 2, textAlign: 'center' }}>
-                Aquí el texto descriptivo, como una breve presentación o contenido que quieras mostrar, similar al estilo de un reproductor.
-              </Typography>
-
-            </Box>
-          </Box>
-
+      <Box
+        sx={{
+          position: 'relative',
+          mb: 5,
+          p: 4,
+          borderRadius: 2,
+          bgcolor: 'background.paper',
+          boxShadow: (theme) => theme.customShadows.z16,
+          overflow: 'hidden',
+        }}
+      >
+        <Box position="relative" zIndex={1}>
+          <Typography variant="h5" gutterBottom sx={{ fontWeight: 'bold' }}>
+            {t('blog_welcome_title')}
+          </Typography>
+          <Typography paragraph sx={{ color: 'text.secondary' }}>
+            {t('blog_welcome_description_1')}
+          </Typography>
+          <Typography paragraph sx={{ color: 'text.secondary' }}>
+            {t('blog_welcome_description_2')}
+          </Typography>
         </Box>
       </Box>
 
-      {/* Sección de las cards */}
       <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 3 }}>
-        {postsToShow.map((post, index) => {
+        {topicsToShow.map((topic: MainTopic, index: number) => {
           const isExpanded = index === expandedIndex;
           const colorScheme = colorSchemes[index % colorSchemes.length];
 
           return (
-            <Box
-              key={post.id}
-              onMouseEnter={() => handleMouseEnter(index)}
-              onMouseLeave={handleMouseLeave}
-              sx={{
-                width: isExpanded ? '60%' : '18%',
-                flexGrow: isExpanded ? 1 : 0,
-                flexShrink: 0,
-                height: '400px',
-                transition: 'all 0.8s ease-in-out',
-                overflow: 'hidden',
-                '@media (max-width: 900px)': {
-                  width: isExpanded ? '100%' : '45%',
-                },
-                '@media (max-width: 600px)': {
-                  width: '100%',
-                }
-              }}
-            >
-              <ColorfulPostItem
-                post={post}
-                colors={colorScheme}
-                expanded={isExpanded}
-              />
-            </Box>
+            <ColorfulPostItem
+            key={topic.id}
+            title={topic.title}
+            colors={colorScheme}
+            expanded={isExpanded}
+            onHoverStart={() => handleMouseEnter(index)}
+            onHoverEnd={handleMouseLeave}
+            onClick={() => handleCardClick(index)}
+          />          
           );
         })}
+
+        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 3, alignItems: 'flex-start' }}>
+          <Box sx={{ flex: 1, minWidth: { xs: '100%', md: '60%' }, p: 3, borderRadius: 2 }}>
+            <Typography variant="h6" gutterBottom sx={{ fontWeight: 'bold' }}>
+              {t('more_content_title')}
+            </Typography>
+            <Typography paragraph sx={{ color: 'text.secondary' }}>
+              {t('more_content_description_1')}
+            </Typography>
+            <Typography paragraph sx={{ color: 'text.secondary' }}>
+              {t('more_content_description_2')}
+            </Typography>
+          </Box>
+
+          <Box
+            sx={{
+              width: '18%',
+              minWidth: 200,
+              height: '400px',
+              borderRadius: 2,
+              bgcolor: 'background.paper',
+              boxShadow: (theme) => theme.customShadows.z8,
+              p: 3,
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'center',
+              '@media (max-width: 900px)': { width: '45%' },
+              '@media (max-width: 600px)': { width: '100%' },
+            }}
+          >
+            <Typography variant="h6" gutterBottom sx={{ fontWeight: 'bold' }}>
+              {t('collaborate_title')}
+            </Typography>
+            <Typography paragraph sx={{ color: 'text.secondary', textAlign: 'center' }}>
+              {t('collaborate_description')}
+            </Typography>
+            <Button
+              variant="contained"
+              color="primary"
+              startIcon={<Iconify icon="mdi:email-edit-outline" />}
+            >
+              {t('contact_me_button')}
+            </Button>
+          </Box>
+        </Box>
+      </Box>
+
+      <Box ref={sectionRefs.post2} sx={{ mb: 10 }}>
+        <Typography variant="h4">{t('project_details_title')}</Typography>
+      </Box>
+
+      <Box ref={sectionRefs.post3} sx={{ mb: 10 }}>
+        <Typography variant="h4">{t('case_study_title')}</Typography>
+      </Box>
+
+      <Box
+        ref={sectionRefs.skills}
+        sx={{ mt: 10, mb: 10, width: '100%', textAlign: 'center', py: 8 }}
+      >
+        <Typography variant="h2" component="h2" sx={{ fontWeight: 'bold', mb: 2 }}>
+          {t('skills_section_title')}
+        </Typography>
+        <Typography
+          variant="body1"
+          sx={{ color: 'text.secondary', maxWidth: '600px', mx: 'auto', mb: 6 }}
+        >
+          {t('skills_section_description')}
+        </Typography>
+        <Grid container spacing={4} justifyContent="center">
+          {technologies.map((tech: Technology) => (
+            <Grid item key={tech.name} xs={6} sm={4} md={3} lg={2}>
+              <Paper
+                elevation={0}
+                sx={{
+                  p: 3,
+                  height: '100%',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: 1.5,
+                  borderRadius: 2,
+                  border: '1px solid',
+                  borderColor: 'divider',
+                  bgcolor: 'background.paper',
+                  transition: 'transform 0.3s, box-shadow 0.3s',
+                  '&:hover': {
+                    boxShadow: (theme) => theme.customShadows.z8,
+                    transform: 'translateY(-4px)',
+                  },
+                }}
+              >
+                <Iconify
+                  icon={tech.logo}
+                  width={48}
+                  height={48}
+                  sx={{ opacity: 0.9, '&:hover': { opacity: 1 } }}
+                />
+                <Typography variant="subtitle2" component="span" sx={{ fontWeight: '500' }}>
+                  {tech.name}
+                </Typography>
+              </Paper>
+            </Grid>
+          ))}
+        </Grid>
       </Box>
     </DashboardContent>
   );

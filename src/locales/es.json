@@ -1,29 +1,45 @@
 {
-  "posts": [
+  "main_topics": [
     {
-      "title": "Desarrollador Java Backend - Interfase",
-      "description": "Trabajo en Interfase desde Octubre 2022, desarrollando aplicaciones en Java con Spring Boot, implementando despliegues en servidores Linux y garantizando la seguridad en el desarrollo.",
-      "category": "Trabajo"
+      "id": "work-experience",
+      "title": "Experiencia laboral",
+      "description": "Mis experiencias profesionales en el desarrollo de software y tecnologías relacionadas.",
+      "posts": [
+        {
+          "id": "java-interfase",
+          "title": "Desarrollador Java Backend - Interfase",
+          "description": "Trabajo en Interfase desde Octubre 2022, desarrollando aplicaciones en Java con Spring Boot, implementando despliegues en servidores Linux y garantizando la seguridad en el desarrollo."
+        }
+      ]
     },
     {
-      "title": "Ingeniería en Computación - UDELAR",
-      "description": "Actualmente cursando el 3er año en la Facultad de Ingeniería, con enfoque en sistemas, desarrollo de software y metodologías ágiles.",
-      "category": "Estudios"
+      "id": "education",
+      "title": "Estudios",
+      "description": "Mi formación académica y cursos complementarios en el área de tecnología.",
+      "posts": [
+        {
+          "id": "ingenieria-udelar",
+          "title": "Ingeniería en Computación - UDELAR",
+          "description": "Actualmente cursando el 3er año en la Facultad de Ingeniería, con enfoque en sistemas, desarrollo de software y metodologías ágiles."
+        },
+        {
+          "id": "cursos-certificaciones",
+          "title": "Cursos y Certificaciones",
+          "description": "Formación en Desarrollo Web, Front-End con ReactJS y Machine Learning. Actualización constante para mejorar habilidades en el desarrollo de software."
+        }
+      ]
     },
     {
-      "title": "Cursos y Certificaciones",
-      "description": "Formación en Desarrollo Web, Front-End con ReactJS y Machine Learning. Actualización constante para mejorar habilidades en el desarrollo de software.",
-      "category": "Estudios"
-    },
-    {
-      "title": "Skills y Tecnologías",
-      "description": "Experiencia en Java (Spring, Maven, Gradle), Git, Linux, Python, C++, JavaScript y ReactJS, entre otros.",
-      "category": "Skills"
-    },
-    {
-      "title": "Proyectos Open Source",
-      "description": "He desarrollado proyectos personales en GitHub, incluyendo herramientas en Python y sistemas de validación de distribuciones.",
-      "category": "Proyectos"
+      "id": "skills",
+      "title": "Skills",
+      "description": "Tecnologías y herramientas que domino y utilizo en mis proyectos.",
+      "posts": [
+        {
+          "id": "skills-tecnologias",
+          "title": "Skills y Tecnologías",
+          "description": "Experiencia en Java (Spring, Maven, Gradle), Git, Linux, Python, C++, JavaScript y ReactJS, entre otros."
+        }
+      ]
     }
   ],
   "hero": {
@@ -38,5 +54,18 @@
       "explore": "Explorar",
       "contact": "Contáctame"
     }
-  }
+  },
+  "blog_welcome_title": "¡Bienvenido a mi Blog!",
+  "blog_welcome_description_1": "Aquí comparto mis ideas, experiencias y aprendizajes sobre desarrollo web, tecnología y otros temas que me apasionan. Explora mis artículos y no dudes en dejar tus comentarios.",
+  "blog_welcome_description_2": "Cada tarjeta representa una sección diferente: pasa el ratón para ver un resumen o haz clic para ver más detalles.",
+  "more_content_title": "Más sobre mi Contenido",
+  "more_content_description_1": "En este blog encontrarás artículos técnicos, reflexiones sobre el desarrollo de software y tutoriales prácticos. Mi objetivo es compartir conocimiento y aprender junto a la comunidad.",
+  "more_content_description_2": "Si te interesa algún tema en particular o tienes sugerencias, no dudes en contactarme a través de mis redes sociales.",
+  "collaborate_title": "¿Te gustaría colaborar?",
+  "collaborate_description": "Si tienes una idea para un artículo o te gustaría colaborar en algún proyecto, ¡no dudes en ponerte en contacto! Me encantaría trabajar contigo.",
+  "contact_me_button": "Contáctame",
+  "project_details_title": "Detalles del Proyecto",
+  "case_study_title": "Caso de Estudio",
+  "skills_section_title": "Habilidades",
+  "skills_section_description": "Tecnologías y herramientas que domino y utilizo en mis proyectos de desarrollo."
 }
