@@ -7,6 +7,10 @@ import Paper from '@mui/material/Paper';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { Iconify } from 'src/components/iconify';
 import { useTranslation } from 'react-i18next';
+
+import { AnalyticsOrderTimeline } from 'src/sections/overview/analytics-order-timeline';
+import { experienceList, educationList } from 'src/sections/blog/timeline-data';
+import { fDateTime } from 'src/utils/format-time';
 import { ColorfulPostItem } from '../color-item';
 
 // Definición de tipos
@@ -81,7 +85,10 @@ export function BlogView() {
   };
 
   const handleCardClick = (index: number) => {
-    const targetSection = index === 2 ? 'skills' : `post${index + 1}`;
+    const targetSection = 
+    index === 0 ? 'post1' : 
+    index === 1 ? 'post2' : 
+    'skills';
     sectionRefs[targetSection as keyof typeof sectionRefs].current?.scrollIntoView({
       behavior: 'smooth',
       block: 'start',
@@ -120,15 +127,16 @@ export function BlogView() {
           const colorScheme = colorSchemes[index % colorSchemes.length];
 
           return (
-            <ColorfulPostItem
+          <ColorfulPostItem
             key={topic.id}
             title={topic.title}
             colors={colorScheme}
             expanded={isExpanded}
+            index={index} // Pasamos el índice aquí
             onHoverStart={() => handleMouseEnter(index)}
             onHoverEnd={handleMouseLeave}
             onClick={() => handleCardClick(index)}
-          />          
+          />       
           );
         })}
 
@@ -179,13 +187,33 @@ export function BlogView() {
         </Box>
       </Box>
 
-      <Box ref={sectionRefs.post2} sx={{ mb: 10 }}>
-        <Typography variant="h4">{t('project_details_title')}</Typography>
-      </Box>
+<Box ref={sectionRefs.post1} sx={{ mb: 10 }}>
+  <Typography variant="h4" gutterBottom>
+    {t('experience_section_title')}
+  </Typography>
+  <AnalyticsOrderTimeline 
+    title="Experiencia Profesional"
+    list={experienceList.map(item => ({
+      ...item,
+      time: fDateTime(item.time)
+    }))}
+    sx={{ mt: 3 }}
+  />
+</Box>
 
-      <Box ref={sectionRefs.post3} sx={{ mb: 10 }}>
-        <Typography variant="h4">{t('case_study_title')}</Typography>
-      </Box>
+<Box ref={sectionRefs.post2} sx={{ mb: 10 }}>
+  <Typography variant="h4" gutterBottom>
+    {t('education_section_title')}
+  </Typography>
+  <AnalyticsOrderTimeline 
+    title="Formación Académica"
+    list={educationList.map(item => ({
+      ...item,
+      time: fDateTime(item.time)
+    }))}
+    sx={{ mt: 3 }}
+  />
+</Box>
 
       <Box
         ref={sectionRefs.skills}

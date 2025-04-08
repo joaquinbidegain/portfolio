@@ -64,8 +64,8 @@
   "collaborate_title": "Would you like to collaborate?",
   "collaborate_description": "If you have an idea for an article or would like to collaborate on a project, please don't hesitate to get in touch! I'd love to work with you.",
   "contact_me_button": "Contact Me",
-  "project_details_title": "Project Details",
-  "case_study_title": "Case Study",
+  "experience_section_title": "Professional Experience",
+  "education_section_title": "Education",
   "skills_section_title": "Skills",
   "skills_section_description": "Technologies and tools that I master and use in my development projects."
 }
